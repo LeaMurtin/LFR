@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  loginDiscord  String    @unique
+  displayName   String    @unique
+  email         String
+  image         String
+  commented     Run[] @relation("commentary")
+}
+
+model Marathon {
+  id            String @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String  @unique
+  runs          Run[]
+}
+
+model Run {
+  id            String @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  game          Game @relation(fields: [gameId], references: [id])
+  gameId        String
+  marathon      Marathon @relation(fields: [marathonId], references: [id])
+  marathonId    String
+  category      String
+  runner        String
+  commentators  User[] @relation("commentary")
+  estimate      Int      //chercher format correct pour la durée
+  StartedAt     DateTime
+  FinishedAt    DateTime
+}
+
+model Game {
+  id            String @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  runs          Run[]
+}
