@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -21,7 +20,7 @@ model User {
   loginDiscord  String    @unique
   displayName   String    @unique
   email         String
-  image         String
+  image         String?
   commented     Run[] @relation("commentary")
 }
 
